@@ -25,7 +25,7 @@ lib/
 
 ---
 
-## 💡 Penjelasan
+## Penjelasan
 
 1.  **Modules**: Jika ingin mengubah tampilan profil, carilah di folder fitur yang sesuai di bagian `views`. Jika ingin mengubah cara kerja fitur (logika), carilah di folder `controllers`.
 2.  **Controller vs View**: 
@@ -37,7 +37,7 @@ lib/
 
 ---
 
-## 🛠️ Teknologi yang Digunakan
+## TechStack
 - **Framework**: [Flutter](https://flutter.dev/)
 - **State Management**: [GetX](https://pub.dev/packages/get) (Untuk navigasi dan state)
 - **Backend**: [Supabase](https://supabase.com/) (Database dan Akun User)
@@ -59,4 +59,4 @@ lib/
    ```
 
 ---
-*Dibuat dengan ❤️ untuk Universitas Muhammadiyah Malang.*
+
