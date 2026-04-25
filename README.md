@@ -1,11 +1,5 @@
 # My Presence UMM - Attendance App
-
-A Flutter application for student and lecturer attendance using GetX, Supabase, and Google Maps integration.
-
-## 🏗️ Project Structure (Modular Architecture)
-
-
-This project uses a **Feature-First (Modular)** approach to ensure scalability and maintainability.
+## Project Structure
 
 ```
 lib/
@@ -34,14 +28,14 @@ lib/
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 - **Framework**: [Flutter](https://flutter.dev/)
 - **State Management**: [GetX](https://pub.dev/packages/get)
 - **Backend**: [Supabase](https://supabase.com/)
 - **Maps**: [Flutter Map](https://pub.dev/packages/flutter_map)
 - **Location**: [Geolocator](https://pub.dev/packages/geolocator)
 
-## 🚀 Getting Started
+## Getting Started
 
 1. **Clone the repository**
 2. **Install dependencies**:
