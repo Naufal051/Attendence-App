@@ -48,4 +48,4 @@ lib/
    ```
 
 ---
-*Developed with ❤️ for Universitas Muhammadiyah Malang.*
+
