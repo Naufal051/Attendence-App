@@ -13,70 +13,91 @@ class RekapView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: Obx(() => Text(
-            controller.isDosen.value ? 'Panel Dosen' : 'Rekap Kehadiran',
-            style: const TextStyle(color: Colors.white)
-        )),
-        backgroundColor: AppColors.primary,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () => controller.determineRoleAndFetch(),
-          )
-        ],
-      ),
+      backgroundColor: Colors.transparent,
       body: Obx(() {
         if (controller.isLoading.value) {
           return const Center(child: CircularProgressIndicator(color: AppColors.primary));
         }
 
-        return ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: controller.listMataKuliah.length,
-          itemBuilder: (context, index) {
-            final mk = controller.listMataKuliah[index];
-            final String mkId = mk['id'];
-            final String namaMk = mk['nama_mk'] ?? 'Mata Kuliah';
-
-            return Card(
-              margin: const EdgeInsets.only(bottom: 16),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              child: ExpansionTile(
-                leading: Icon(
-                    controller.isDosen.value ? Icons.assignment_ind : Icons.school,
-                    color: AppColors.primary
-                ),
-                title: Text(namaMk, style: const TextStyle(fontWeight: FontWeight.bold)),
-                subtitle: Text(controller.isDosen.value ? 'Atur Lokasi Mengajar' : 'Detail Pertemuan'),
-                trailing: controller.isDosen.value
-                    ? IconButton(
-                  icon: const Icon(Icons.add_location_alt_rounded, color: AppColors.primary),
-                  onPressed: () {
-                    controller.tempLat.value = mk['latitude'];
-                    controller.tempLng.value = mk['longitude'];
-                    _showEditDialog(context, mk);
-                  },
-                )
-                    : const Icon(Icons.expand_more),
-                children: [
-                  if (!controller.isDosen.value) ...[
-                    const Divider(),
-                    _buildMahasiswaGrid(mkId),
-                  ] else ...[
-                    ListTile(
-                      dense: true,
-                      leading: const Icon(Icons.info_outline, color: Colors.blue),
-                      title: const Text("Lokasi Terdaftar"),
-                      subtitle: Text("Ruang: ${mk['ruang']} (${mk['latitude']}, ${mk['longitude']})"),
-                    )
-                  ]
-                ],
-              ),
-            );
+        return RefreshIndicator(
+          onRefresh: () async {
+            controller.determineRoleAndFetch();
           },
+          color: AppColors.primary,
+          child: ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: controller.listMataKuliah.length,
+            itemBuilder: (context, index) {
+              final mk = controller.listMataKuliah[index];
+              final String mkId = mk['id'];
+              final String namaMk = mk['nama_mk'] ?? 'Mata Kuliah';
+
+              return Container(
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: Colors.grey.shade200),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.03),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Theme(
+                  data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                  child: ExpansionTile(
+                    tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    leading: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Icon(
+                        controller.isDosen.value ? Icons.assignment_ind : Icons.school,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                    title: Text(
+                      namaMk, 
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: Colors.black87)
+                    ),
+                    subtitle: Text(
+                      controller.isDosen.value ? 'Atur Lokasi Mengajar' : 'Detail Pertemuan',
+                      style: const TextStyle(fontSize: 12, color: Colors.black54)
+                    ),
+                    trailing: controller.isDosen.value
+                        ? IconButton(
+                            icon: const Icon(Icons.add_location_alt_rounded, color: AppColors.primary),
+                            onPressed: () {
+                              controller.tempLat.value = mk['latitude'];
+                              controller.tempLng.value = mk['longitude'];
+                              _showEditDialog(context, mk);
+                            },
+                          )
+                        : const Icon(Icons.expand_more, color: Colors.grey),
+                    children: [
+                      if (!controller.isDosen.value) ...[
+                        Divider(color: Colors.grey.shade200, height: 1),
+                        _buildMahasiswaGrid(mkId),
+                      ] else ...[
+                        Divider(color: Colors.grey.shade200, height: 1),
+                        ListTile(
+                          dense: true,
+                          leading: const Icon(Icons.info_outline, color: Colors.blue),
+                          title: const Text("Lokasi Terdaftar"),
+                          subtitle: Text("Ruang: ${mk['ruang']} (${mk['latitude']}, ${mk['longitude']})"),
+                        )
+                      ]
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
         );
       }),
     );

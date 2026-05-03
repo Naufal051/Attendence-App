@@ -1,12 +1,17 @@
 import 'package:get/get.dart';
 import '../../../main.dart'; // Menyesuaikan path ke main.dart
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
 
 class HomeController extends GetxController {
   // Variabel umum
   var role = "mahasiswa".obs;
   var namaMhs = "".obs;
   var prodi = "".obs;
+
+// Variabel untuk lokasi
+  var lokasiSaatini = "Mencari lokasi...".obs;
 
   // Khusus Mahasiswa
   var nim = "".obs;
@@ -37,6 +42,7 @@ class HomeController extends GetxController {
       }
     }
     _fetchJadwalDariSupabase();
+    _dapatkanLokasi();
   }
 
   void _generateFotoUrl() {
@@ -45,6 +51,58 @@ class HomeController extends GetxController {
       fotoUrl.value = "https://krs.umm.ac.id/Poto/$folder/${nim.value}.JPG";
     }
   }
+
+// Fungsi untuk mendapatkan lokasi saat ini
+  Future<void> _dapatkanLokasi() async {
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        lokasiSaatini.value = "Layanan lokasi tidak aktif.";
+        return;
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          lokasiSaatini.value = "Izin lokasi ditolak.";
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        lokasiSaatini.value = "Izin lokasi ditolak secara permanen.";
+        return;
+      }
+
+      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude);
+      
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks.first;
+        
+        // Ambil data kecamatan dan kota
+        String kecamatan = place.subLocality ?? "";
+        String kota = place.locality ?? "";
+
+        if (kecamatan.isNotEmpty && kota.isNotEmpty) {
+          lokasiSaatini.value = "$kecamatan, $kota";
+        } else if (kota.isNotEmpty) {
+          lokasiSaatini.value = kota;
+        } else if (kecamatan.isNotEmpty) {
+          lokasiSaatini.value = kecamatan;
+        } else {
+          lokasiSaatini.value = "Lokasi Ditemukan";
+        }
+        
+      } else {
+        lokasiSaatini.value = "Lokasi tidak ditemukan.";
+      }
+    } catch (e) {
+      lokasiSaatini.value = "Gagal mendapatkan lokasi: $e";
+    }
+  }
+  
 
   Future<void> _fetchJadwalDariSupabase() async {
     isLoading.value = true;
