@@ -8,6 +8,8 @@ class LoginController extends GetxController {
   final identifierCtrl = TextEditingController();
   final passwordCtrl = TextEditingController();
   var isLoading = false.obs;
+  var isPasswordVisible = false.obs;
+  var rememberMe = false.obs;
 
   Future<void> doLogin() async {
     final String identifier = identifierCtrl.text.trim();
