@@ -11,7 +11,7 @@ import 'package:attendence_app/utils/AppColors.dart';
 // 4. TAMPILAN NAVIGASI UTAMA (Bottom Nav)
 // ==========================================
 class MainNavView extends StatefulWidget {
-  const MainNavView({Key? key}) : super(key: key);
+  const MainNavView({super.key});
 
   @override
   State<MainNavView> createState() => _MainNavViewState();
@@ -68,7 +68,7 @@ class _MainNavViewState extends State<MainNavView> {
 }
 
 class HomeView extends StatelessWidget {
-  HomeView({Key? key}) : super(key: key);
+  HomeView({super.key});
 
   final HomeController controller = Get.find<HomeController>();
 

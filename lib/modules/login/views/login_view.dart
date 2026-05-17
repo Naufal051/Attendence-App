@@ -4,7 +4,7 @@ import '../controllers/login_controller.dart';
 import '../../../utils/AppColors.dart';
 
 class LoginView extends StatelessWidget {
-  LoginView({Key? key}) : super(key: key);
+  LoginView({super.key});
 
   final LoginController controller = Get.find();
 

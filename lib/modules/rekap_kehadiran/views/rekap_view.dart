@@ -6,7 +6,7 @@ import 'package:latlong2/latlong.dart';
 import '../../../utils/AppColors.dart';
 
 class RekapView extends StatelessWidget {
-  RekapView({Key? key}) : super(key: key);
+  RekapView({super.key});
 
   final RekapController controller = Get.put(RekapController());
 

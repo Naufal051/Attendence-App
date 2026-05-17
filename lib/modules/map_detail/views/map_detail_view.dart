@@ -9,7 +9,7 @@ class MapDetailView extends StatefulWidget {
   final Map<String, dynamic> mataKuliahData;
   final String nimMahasiswa;
 
-  const MapDetailView({Key? key, required this.mataKuliahData, required this.nimMahasiswa}) : super(key: key);
+  const MapDetailView({super.key, required this.mataKuliahData, required this.nimMahasiswa});
 
   @override
   State<MapDetailView> createState() => _MapDetailViewState();

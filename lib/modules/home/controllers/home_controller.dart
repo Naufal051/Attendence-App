@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import '../../../main.dart'; // Menyesuaikan path ke main.dart
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class HomeController extends GetxController {
   // Variabel umum

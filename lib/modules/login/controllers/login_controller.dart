@@ -62,7 +62,7 @@ class LoginController extends GetxController {
           throw 'Akun terdaftar namun profil (Role) tidak ditemukan.';
         }
       }
-    } on AuthException catch (e) {
+    } on AuthException {
       Get.snackbar('Login Gagal', 'Email/NIM atau Password salah.',
           backgroundColor: Colors.red.shade700, colorText: Colors.white);
     } catch (e) {
