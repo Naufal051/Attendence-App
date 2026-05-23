@@ -4,19 +4,28 @@ import 'app_routes.dart';
 // Import dari lokasi baru (Modules)
 import '../modules/login/views/login_view.dart';
 import '../modules/login/bindings/login_binding.dart';
+import '../modules/splash/views/splash_view.dart';
+import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/map_detail/views/map_detail_view.dart';
 import '../modules/rekap_kehadiran/views/rekap_view.dart';
 
 class AppPages {
-  static const INITIAL = Routes.LOGIN;
+  static const INITIAL = Routes.SPLASH;
 
   static final routes = [
     GetPage(
+      name: Routes.SPLASH,
+      page: () => const SplashView(),
+      binding: SplashBinding(),
+    ),
+    GetPage(
       name: Routes.LOGIN,
-      page: () => LoginView(),
+      page: () => const LoginView(),
       binding: LoginBinding(),
+      transition: Transition.fade,
+      transitionDuration: const Duration(milliseconds: 600),
     ),
     GetPage(
       name: Routes.HOME,

@@ -22,6 +22,7 @@ class _MapDetailViewState extends State<MapDetailView> {
   void initState() {
     super.initState();
     _refreshData();
+    controller.fetchSesiAktif(widget.mataKuliahData['id']);
   }
 
   void _refreshData() {
@@ -147,13 +148,118 @@ class _MapDetailViewState extends State<MapDetailView> {
                       ],
                     ),
                     const Divider(height: 25),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    //   children: [
+                    //     Column(children: [const Icon(Icons.access_time, size: 18), Text(jam, style: const TextStyle(fontSize: 12))]),
+                    //     Column(children: [const Icon(Icons.room, size: 18), Text(ruang, style: const TextStyle(fontSize: 12))]),
+                    //   ],
+                    // ),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        Column(children: [const Icon(Icons.access_time, size: 18), Text(jam, style: const TextStyle(fontSize: 12))]),
-                        Column(children: [const Icon(Icons.room, size: 18), Text(ruang, style: const TextStyle(fontSize: 12))]),
+                        /// JAM MATA KULIAH
+                        Column(
+                          children: [
+                            const Icon(Icons.access_time, size: 18),
+                            Text(jam, style: const TextStyle(fontSize: 12)),
+                          ],
+                        ),
+
+                        /// RUANG
+                        Column(
+                          children: [
+                            const Icon(Icons.room, size: 18),
+                            Text(ruang, style: const TextStyle(fontSize: 12)),
+                          ],
+                        ),
                       ],
                     ),
+
+                    const SizedBox(height: 16),
+
+                    /// RENTANG WAKTU PRESENSI
+                    Obx(() {
+                      final sesi = controller.sesiAktif.value;
+
+                      if (sesi == null) {
+                        return Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.red.shade50,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.red.shade100),
+                          ),
+                          child: const Row(
+                            children: [
+                              Icon(
+                                Icons.info_outline,
+                                color: Colors.red,
+                                size: 18,
+                              ),
+
+                              SizedBox(width: 8),
+
+                              Expanded(
+                                child: Text(
+                                  "Belum ada sesi presensi hari ini",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+
+                      return Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.green.shade50,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.green.shade100),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.timer,
+                              color: Colors.green,
+                              size: 18,
+                            ),
+
+                            const SizedBox(width: 8),
+
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Presensi Pertemuan Ke-${sesi['pertemuan_ke']}",
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+
+                                  const SizedBox(height: 2),
+
+                                  Text(
+                                    "${sesi['jam_presensi_dimulai']} - ${sesi['jam_presensi_berakhir']}",
+                                    style: const TextStyle(fontSize: 12),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
                     const SizedBox(height: 20),
                     SizedBox(
                       width: double.infinity,

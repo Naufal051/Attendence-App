@@ -1,5 +1,6 @@
 
 abstract class Routes {
+  static const SPLASH = '/splash';
   static const LOGIN = '/login';
   static const HOME = '/home'; // Ini akan mengarah ke MainNavView
   static const MAP_DETAIL = '/map-detail';

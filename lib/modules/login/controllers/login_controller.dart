@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../main.dart';
-import '../../home/views/home_view.dart'; // Mengarah ke lokasi baru HomeView
+import '../../../app_routes/app_routes.dart';
+import '../../../utils/SharedPrefs.dart';
 
 class LoginController extends GetxController {
   final identifierCtrl = TextEditingController();
   final passwordCtrl = TextEditingController();
   var isLoading = false.obs;
+  var isPasswordVisible = false.obs;
+  var rememberMe = false.obs;
 
   Future<void> doLogin() async {
     final String identifier = identifierCtrl.text.trim();
@@ -47,20 +50,24 @@ class LoginController extends GetxController {
         final results = await Future.wait([
           supabase.from('mahasiswa').select('nim, nama, prodi').eq('auth_id', user.id).maybeSingle(),
           supabase.from('dosen').select('id, nama, prodi, email, fakultas').eq('auth_id', user.id).maybeSingle(),
+          supabase.from('admin').select('id, nama, role').eq('auth_id', user.id).maybeSingle(),
         ]);
 
         final dataMahasiswa = results[0];
         final dataDosen = results[1];
+        final dataAdmin = results[2];
 
         if (dataMahasiswa != null) {
           _handleSuccess(dataMahasiswa, 'mahasiswa');
         } else if (dataDosen != null) {
           _handleSuccess(dataDosen, 'dosen');
+        } else if (dataAdmin != null) {
+          _handleSuccess(dataAdmin, 'admin');
         } else {
           throw 'Akun terdaftar namun profil (Role) tidak ditemukan.';
         }
       }
-    } on AuthException catch (e) {
+    } on AuthException {
       Get.snackbar('Login Gagal', 'Email/NIM atau Password salah.',
           backgroundColor: Colors.red.shade700, colorText: Colors.white);
     } catch (e) {
@@ -71,7 +78,7 @@ class LoginController extends GetxController {
     }
   }
 
-  void _handleSuccess(Map<String, dynamic>? profileData, String role) {
+  void _handleSuccess(Map<String, dynamic>? profileData, String role) async {
     if (profileData == null) return;
 
     if (role == 'dosen') {
@@ -79,6 +86,10 @@ class LoginController extends GetxController {
     }
 
     final Map<String, dynamic> userData = {...profileData, 'role': role};
+
+    // Simpan ke Shared Preferences
+    await SharedPrefs.setLoginStatus(true);
+    await SharedPrefs.setUserData(userData);
 
     Get.snackbar(
         'Berhasil',
@@ -88,7 +99,7 @@ class LoginController extends GetxController {
         snackPosition: SnackPosition.TOP
     );
 
-    Get.offAll(() => const MainNavView(), arguments: userData);
+    Get.offAllNamed(Routes.HOME, arguments: userData);
   }
 
   @override

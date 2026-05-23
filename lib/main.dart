@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'app_routes/app_pages.dart';
+import 'app_routes/app_routes.dart';
+import 'utils/SharedPrefs.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SharedPrefs.init();
 
   await Supabase.initialize(
     //untuk project ini hardcode, biar kalian ga perlu setup .env (tapi jangan ditiru yaa)
@@ -26,7 +29,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Attendance App',
       theme: ThemeData.light(),
-      initialRoute: AppPages.INITIAL,
+      initialRoute: Routes.SPLASH,
       getPages: AppPages.routes,
     );
   }
